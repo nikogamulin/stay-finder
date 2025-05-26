@@ -40,9 +40,12 @@ def get_db_connection():
     return conn
 
 
-def list_db_tables() -> dict:
+def list_db_tables(dummy_param: str) -> dict:
     """Lists all tables in the SQLite database.
 
+    Args:
+        dummy_param (str): This parameter is not used by the function
+                           but helps ensure schema generation. A non-empty string is expected.
     Returns:
         dict: A dictionary with keys 'success' (bool), 'message' (str),
               and 'tables' (list[str]) containing the table names if successful.
@@ -82,9 +85,7 @@ def get_table_schema(table_name: str) -> dict:
     return {"table_name": table_name, "columns": columns}
 
 
-def query_db_table(
-    table_name: str, columns: str = "*", condition: str | None = None
-) -> list[dict]:
+def query_db_table(table_name: str, columns: str, condition: str) -> list[dict]:
     """Queries a table with an optional condition.
 
     Args:
@@ -204,11 +205,11 @@ app = Server("sqlite-db-mcp-server")
 
 # Wrap database utility functions as ADK FunctionTools
 ADK_DB_TOOLS = {
-    "list_tables": FunctionTool(func=list_db_tables),
+    "list_db_tables": FunctionTool(func=list_db_tables),
     "get_table_schema": FunctionTool(func=get_table_schema),
-    "query_table": FunctionTool(func=query_db_table),
-    "insert_table_data": FunctionTool(func=insert_data),
-    "delete_table_data": FunctionTool(func=delete_data),
+    "query_db_table": FunctionTool(func=query_db_table),
+    "insert_data": FunctionTool(func=insert_data),
+    "delete_data": FunctionTool(func=delete_data),
 }
 
 

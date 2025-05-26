@@ -7,10 +7,13 @@ This project demonstrates an Agent Development Kit (ADK) agent that interacts wi
 ```
 adk-mcp/
 ├── local_mcp/
-│   ├── agent.py             # The ADK agent
+│   ├── agent.py             # The ADK agent for the local SQLite DB
 │   ├── server.py            # The MCP server exposing database tools
 │   ├── create_db.py         # Script to initialize the SQLite database
 │   ├── database.db          # The SQLite database file
+│   └── __init__.py
+├── remote_mcp_agent/        # Example agent for connecting to a remote MCP server
+│   ├── agent.py             # The ADK agent configured for a remote MCP
 │   └── __init__.py
 ├── .env                   # For GOOGLE_API_KEY (ensure it's in .gitignore if repo is public)
 ├── requirements.txt       # Python dependencies

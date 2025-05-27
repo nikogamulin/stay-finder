@@ -24,8 +24,7 @@ logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s",
     handlers=[
-        logging.FileHandler(LOG_FILE_PATH, mode="w"),  # 'w' to overwrite log each run
-        # logging.StreamHandler() # Uncomment to also see logs in console if server run directly
+        logging.FileHandler(LOG_FILE_PATH, mode="w"),
     ],
 )
 # --- End Logging Setup ---

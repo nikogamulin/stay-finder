@@ -13,6 +13,12 @@ root_agent = Agent(
                 command="python", args=["absolute_path_to_server.py"]
             )
         ),
+        # https://github.com/makenotion/notion-mcp-server
+        MCPToolset(
+            connection_params=StdioServerParameters(
+                command="npx", args=["-y", "@notionhq/notion-mcp-server"]
+            )
+        ),
         # https://github.com/modelcontextprotocol/servers/tree/main/src
         MCPToolset(
             connection_params=StdioServerParameters(

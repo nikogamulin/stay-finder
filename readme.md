@@ -1,4 +1,4 @@
-# ADK Agent with Local SQLite Database MCP Server
+# ADK Agent MCP Server
 
 This project demonstrates an Agent Development Kit (ADK) agent that interacts with a local SQLite database. The interaction is facilitated by a Model Context Protocol (MCP) server that exposes tools to query and modify the database.
 

@@ -1,5 +1,9 @@
 # ADK Accommodation Search Agent
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Google ADK](https://img.shields.io/badge/Google-ADK-4285f4.svg)](https://google.github.io/adk-docs/)
+
 A hierarchical multi-agent system built with Google's Agent Development Kit (ADK) for intelligent vacation accommodation search. The system uses web browsing capabilities via MCP (Model Context Protocol) to search and analyze accommodation options across multiple platforms.
 
 ## Architecture Overview
@@ -299,7 +303,16 @@ adk run accomodation_search_single_agent
 
 ## License
 
-[Add your license information here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### What this means:
+- ✅ **Free to use** for any purpose (personal, commercial, educational)
+- ✅ **Free to modify** and create derivative works
+- ✅ **Free to distribute** original or modified versions
+- ✅ **No warranty** - use at your own risk
+- ✅ **Attribution required** - keep the copyright notice
+
+Perfect for showcasing AI development skills and encouraging community contributions!
 
 ## Support
 

@@ -7,6 +7,45 @@ from google.adk.agents import LlmAgent
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters, SseServerParams
 
+# Comprehensive monkey patch to override ALL potential 5-second timeouts
+print("Applying comprehensive timeout patches to main agent...")
+
+# Patch 1: ClientSession
+try:
+    from datetime import timedelta
+    from mcp.client.session import ClientSession
+    
+    original_client_init = ClientSession.__init__
+    def patched_client_init(self, read_transport, write_transport, read_timeout_seconds=None):
+        if read_timeout_seconds is None or read_timeout_seconds == timedelta(seconds=5):
+            read_timeout_seconds = timedelta(seconds=60)
+        return original_client_init(self, read_transport, write_transport, read_timeout_seconds)
+    
+    ClientSession.__init__ = patched_client_init
+    print("✓ Patched ClientSession timeout in main agent")
+except Exception as e:
+    print(f"✗ ClientSession patch failed in main agent: {e}")
+
+# Patch 2: Global timedelta replacement
+try:
+    import datetime
+    original_timedelta = datetime.timedelta
+    
+    def patched_timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0):
+        if seconds == 5 and days == 0 and microseconds == 0 and milliseconds == 0 and minutes == 0 and hours == 0 and weeks == 0:
+            seconds = 60  # Replace 5-second timeouts with 60 seconds
+        return original_timedelta(days, seconds, microseconds, milliseconds, minutes, hours, weeks)
+    
+    datetime.timedelta = patched_timedelta
+    print("✓ Patched global timedelta in main agent")
+except Exception as e:
+    print(f"✗ Global timedelta patch failed in main agent: {e}")
+
+# Note: Session manager patch removed to avoid signature conflicts
+print("✓ Skipped session manager patch in main agent (not needed with other patches)")
+
+print("Main agent timeout patches applied, continuing with agent setup...")
+
 from .prompt import WEB_PROMPT
 from accommodation_search_agent.shared_lib.callbacks import before_search_term_browser_agent_callback
 
@@ -20,27 +59,22 @@ args_playwrightmcp = [
     "playwright-mcp@latest"
 ]
 
-# Backup: simple browser MCP
+# simple browser MCP
 args_browsermcp = [
     "-y",
     "@browsermcp/mcp@latest"
 ]
 
 search_term_browser_agent = LlmAgent(
-    model='gemini-2.0-flash',
-    # model=LiteLlm(model="openai/gpt-4o"),
+    # model='gemini-2.0-flash',
+    model=LiteLlm(model="openai/gpt-4o"),
     name='search_term_browser_agent',
     instruction=WEB_PROMPT,
     tools=[
         MCPToolset(
             connection_params=StdioServerParameters(
                 command='npx',
-                args=args_playwrightmcp,
-                env={
-                    # Fast operation settings
-                    "PLAYWRIGHT_TIMEOUT": "4000",
-                    "PLAYWRIGHT_NAVIGATION_TIMEOUT": "3000",
-                }
+                args=args_browsermcp
             )
         )
     ],

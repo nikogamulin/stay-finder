@@ -64,7 +64,7 @@ def before_search_term_selection_agent_callback(
     agent_name = callback_context.agent_name
     invocation_id = callback_context.invocation_id
     logging.info("Before search term selection agent callback for %s with invocation ID %s", agent_name, invocation_id)
-    if 'search_process_status' not in callback_context.state:
+    if 'search_process' not in callback_context.state:
         callback_context.state['search_process'] = {}
         for search_string in callback_context.state['search_strings']['search_strings']:
             callback_context.state['search_process'][search_string] = {
@@ -82,4 +82,18 @@ def before_search_term_browser_agent_callback(
     agent_name = callback_context.agent_name
     invocation_id = callback_context.invocation_id
     logging.info("Before search term browser agent callback for %s with invocation ID %s", agent_name, invocation_id)
+    return None
+
+def before_browsing_results_agent_callback(
+    callback_context: CallbackContext) -> Optional[types.Content]:
+    """
+    Callback that executes before the browsing results agent is called.
+    """
+    agent_name = callback_context.agent_name
+    invocation_id = callback_context.invocation_id
+    logging.info("Before browsing results agent callback for %s with invocation ID %s", agent_name, invocation_id)
+    if 'selected_search_term' not in callback_context.state:
+        # skip the agent if no search term is selected
+        callback_context.actions.skip = True
+        return None
     return None

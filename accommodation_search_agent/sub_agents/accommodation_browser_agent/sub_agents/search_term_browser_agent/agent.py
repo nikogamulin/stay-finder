@@ -46,7 +46,7 @@ print("✓ Skipped session manager patch in main agent (not needed with other pa
 
 print("Main agent timeout patches applied, continuing with agent setup...")
 
-from .prompt import WEB_PROMPT
+from .prompt import WEB_SEARCH_PROMPT, AIRBNB_SEARCH_PROMPT
 from accommodation_search_agent.shared_lib.callbacks import before_search_term_browser_agent_callback
 
 # ---- MCP Library ----
@@ -65,16 +65,43 @@ args_browsermcp = [
     "@browsermcp/mcp@latest"
 ]
 
+args_airbnbmcp = [
+    "-y",
+    "@openbnb/mcp-server-airbnb",
+    "--ignore-robots-txt"
+  ]
+
+# Determine the search mode from environment variables
+SEARCH_MODE = os.getenv("SEARCH_MODE", "AIRBNB") # Default to AIRBNB if not set
+
+# Conditionally set arguments and prompt based on SEARCH_MODE
+if SEARCH_MODE == "BROWSER":
+    agent_args = args_browsermcp
+    agent_instruction = WEB_SEARCH_PROMPT
+    toolset_command = 'npx'
+    print("✓ Using BROWSER mode for search_term_browser_agent")
+elif SEARCH_MODE == "AIRBNB":
+    agent_args = args_airbnbmcp
+    agent_instruction = AIRBNB_SEARCH_PROMPT
+    toolset_command = 'npx' # npx is also used for airbnb mcp
+    print("✓ Using AIRBNB mode for search_term_browser_agent")
+else:
+    # Default to AIRBNB if an invalid mode is specified
+    agent_args = args_airbnbmcp
+    agent_instruction = AIRBNB_SEARCH_PROMPT
+    toolset_command = 'npx'
+    print(f"✗ Invalid SEARCH_MODE: {SEARCH_MODE}. Defaulting to AIRBNB mode.")
+
 search_term_browser_agent = LlmAgent(
     # model='gemini-2.0-flash',
     model=LiteLlm(model="openai/gpt-4o"),
     name='search_term_browser_agent',
-    instruction=WEB_PROMPT,
+    instruction=agent_instruction, # Use the dynamically set instruction
     tools=[
         MCPToolset(
             connection_params=StdioServerParameters(
-                command='npx',
-                args=args_browsermcp
+                command=toolset_command, # Use the dynamically set command
+                args=agent_args # Use the dynamically set arguments
             )
         )
     ],

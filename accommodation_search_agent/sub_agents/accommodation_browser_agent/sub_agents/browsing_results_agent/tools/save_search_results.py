@@ -5,7 +5,7 @@ from google.adk.tools.tool_context import ToolContext
 
 def save_search_results(
     tool_context: ToolContext,
-    search_results: List[Dict]  # Assuming search_results is a list of dictionaries
+    search_results: str  # Assuming search_results is a string
 ) -> Dict:
     """
     Save the search results for the currently selected search term to state
@@ -13,7 +13,7 @@ def save_search_results(
 
     Args:
         tool_context: ADK tool context.
-        search_results: A list of dictionaries representing the search results.
+        search_results: A string representing the search results that are the candidate accommodation listings.
 
     Returns:
         Dictionary with save status.
@@ -58,24 +58,18 @@ def save_search_results(
             #     "message": f"Search term '{selected_search_term}' not found in search_process state."
             # }
         
-        if not isinstance(search_results, list):
-            return {
-                "status": "error",
-                "message": "search_results must be a list."
-            }
-
         # Save the results and mark as processed
-        tool_context.state["search_process"][selected_search_term]['results'] = search_results
+        # if the selected term already has results, append the new string to the existing results
+        if tool_context.state["search_process"][selected_search_term]['results']:
+            tool_context.state["search_process"][selected_search_term]['results'] += search_results
+        else:
+            tool_context.state["search_process"][selected_search_term]['results'] = search_results
         tool_context.state["search_process"][selected_search_term]['processed'] = True
-        
-        # Optionally, clear the selected_search_term from state after processing
-        # del tool_context.state["selected_search_term"]
 
         return {
             "status": "success",
             "message": f"Search results for '{selected_search_term}' saved successfully.",
-            "search_term": selected_search_term,
-            "results_count": len(search_results)
+            "search_term": selected_search_term
         }
 
     except Exception as e:

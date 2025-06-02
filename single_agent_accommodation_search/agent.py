@@ -72,6 +72,12 @@ args_browsermcp = [
     "@browsermcp/mcp@latest"
 ]
 
+args_airbnbmcp = [
+    "-y",
+    "@openbnb/mcp-server-airbnb",
+    "--ignore-robots-txt"
+  ]
+
 search_term_browser_agent = LlmAgent(
     model='gemini-2.0-flash',
     # model=LiteLlm(model="openai/gpt-4o"),
@@ -80,7 +86,7 @@ search_term_browser_agent = LlmAgent(
         MCPToolset(
             connection_params=StdioServerParameters(
                 command='npx',
-                args=args_browsermcp
+                args=args_airbnbmcp
             )
         )
     ]

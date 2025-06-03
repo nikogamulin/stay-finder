@@ -8,6 +8,8 @@ A hierarchical multi-agent system built with Google's Agent Development Kit (ADK
 
 ## Architecture Overview
 
+![Architecture Overview](https://github.com/nikogamulin/stay-finder/blob/main/images/architecture_overview.png?raw=true)
+
 This project implements a sophisticated 4-phase orchestrated workflow:
 
 ### Agent Hierarchy

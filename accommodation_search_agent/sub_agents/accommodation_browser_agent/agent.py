@@ -22,7 +22,7 @@ accomodation_browser_loop_agent = LoopAgent(
 
 accomodation_sequential_agent = SequentialAgent(
     name="accomodation_sequential_agent",
-    description="""Analyzes all search terms and then presents the results.
+    description="""First, analyzes all search terms and then passes the results to the results presenter agent to prepare a neat list of all the results.
     """,
     sub_agents=[accomodation_browser_loop_agent, results_presenter_agent]
 )
